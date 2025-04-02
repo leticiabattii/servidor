@@ -1,32 +1,31 @@
-const http = require('http')
-const url = require('url')
-const {soma, subtracao,multiplicacao,divisao} = require('./teste')
+const express = require('express');
+const {soma, subtracao, multiplicacao, divisao} = require('./teste')
+
+const server = express()
 
 const PORT = 8000
 
-//criar servidor
-const server = http.createServer((req, res) =>{
-    const urlCapturada = url.parse(req.url, true)
-    console.log(urlCapturada)
-    const {query, pathname} = urlCapturada
-    let resultado = 0
-    if(pathname== '/soma'){
-        resultado = soma(Number(query.a), Number(query.b))
-        res.end(`o valor final é ${resultado}`)
-    }else if(pathname == '/subtracao'){
-        resultado = subtracao(Number(query.a), Number(query.b))
-    }else if(pathname == '/divisao'){
-        resultado = divisao(Number(query.a), Number(query.b))
-   
-   }else if(pathname == '/multiplicacao'){
-    resultado = multiplicacao(Number(query.a), Number(query.b))
-   }else{
-    res.statusCode = 404
-    res.end('Pagina nao encontrada')
-   }
-   res.end(`O valor final e ${resultado}`)
-}
-    )
+server.get('/soma', (req, res) => {
+     resultado = soma(req.query.a, req.query.b)
+    res.send(`o resultado da soma e: ${resultado}`)
+})
+server.get('/subtracao', (req, res) => {
+    resultado = subtracao(req.query.a, req.query.b)
+   res.send(`o resultado da subtracao e: ${resultado}`)
+})
+server.get('/multiplicacao', (req, res) => {
+    resultado = multiplicacao(req.query.a, req.query.b)
+   res.send(`o resultado da multiplicacao e: ${resultado}`)
+})
+server.get('/divisao', (req, res) => {
+    resultado = divisao(req.query.a, req.query.b)
+   res.send(`o resultado da divisao e: ${resultado}`)
+})
+
+const {soma, subtracao,multiplicacao,divisao} = require('./teste')
+const path = require('path')
+
+
 
 server.listen(PORT, ()=> {
     console.log(`Servidor rodando na porta ${PORT}`)
